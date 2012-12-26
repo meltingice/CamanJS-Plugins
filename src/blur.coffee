@@ -5,13 +5,6 @@ Caman.Filter.register "boxBlur", ->
     1, 1, 1
   ]
 
-Caman.Filter.register "radialBlur", ->
-  @processKernel "Radial Blur", [
-    0, 1, 0,
-    1, 1, 1,
-    0, 1, 0
-  ]
-
 Caman.Filter.register "heavyRadialBlur", ->
   @processKernel "Heavy Radial Blur", [
     0, 0, 1, 0, 0,
@@ -30,7 +23,7 @@ Caman.Filter.register "gaussianBlur", ->
     1, 4, 6, 4, 1
   ]
 
-Caman.Filter.register "motionBlur", ->
+Caman.Filter.register "motionBlur", (degrees) ->
   if degrees in [0, 180]
     kernel = [
       0, 0, 1, 0, 0,

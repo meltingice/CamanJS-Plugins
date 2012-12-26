@@ -317,7 +317,7 @@ do ->
       radiusFactor: 1.5
       steps: 3
 
-    opts = Caman.Util.extend defaults, opts
+    opts = Util.extend defaults, opts
     opts.angle *= Math.PI / 180
     gradient = getLinearGradientMap(@dimensions.width, @dimensions.height, opts.center.x, opts.center.y, opts.angle, opts.focusWidth, true)
 
@@ -334,7 +334,7 @@ do ->
       steps: 3
       radius: null
 
-    opts = Caman.Util.extend defaults, opts
+    opts = Util.extend defaults, opts
 
     if not opts.radius
       opts.radius = if @dimensions.width < @dimensions.height then @dimensions.height else @dimensions.width
