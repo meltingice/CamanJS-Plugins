@@ -31,7 +31,7 @@ Filter.register "vignette", (size, strength = 60) ->
   bezier = Calculate.bezier [0, 1], [30, 30], [70, 60], [100, 80]
 
   @process "vignette", (rgba) ->
-    loc = @locationXY()
+    loc = rgba.locationXY()
     dist = Calculate.distance loc.x, loc.y, center[0], center[1]
 
     if dist > end
@@ -103,7 +103,7 @@ Filter.register "rectangularVignette", (opts) ->
   opts.maxDist = Calculate.distance(0, 0, opts.corners[3].x, opts.corners[3].y) - opts.cornerRadius
 
   @process "rectangularVignette", (rgba) ->
-    loc = @locationXY()
+    loc = rgba.locationXY()
 
     # Trivial rejects
     if (loc.x > opts.corners[0].x and loc.x < opts.corners[1].x) and (loc.y > opts.coords.bottom and loc.y < opts.coords.top)
