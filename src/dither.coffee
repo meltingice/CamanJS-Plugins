@@ -1,6 +1,7 @@
 ###
 Dither - a plugin for CamanJS
 by Andy Isaacson
+andygetshismail@gmail.com
 
 based on info from:
 http://www.tannerhelland.com/4660/dithering-eleven-algorithms-source-code/
@@ -65,17 +66,28 @@ Caman.Plugin.register "dither", (algo) ->
   # First convert the image into grayscale
   for y in [0...height]
     for x in [0...width]
+      # Unpack the RGB color channels for each pixel from the flat array
       r = pixels[ind(x,y)]
       g = pixels[ind(x,y) + 1]
       b = pixels[ind(x,y) + 2]
+
+      # The formula used to convert color to grayscale is a more accurate representation
+      # of how our eyes see color.  See http://en.wikipedia.org/wiki/Lab_color_space
       luminance = (0.2126 * r) + (0.7152 * g) + (0.0722 * b)
       output[x][y] = luminance
 
   # Now derive the B/W output into the output array
   for y in [0...height]
     for x in [0...width]
+      # Determine whether this pixel is black or white by taking the initial luminance
+      # plus the partial errors contributed by the surrounding pixels
       newVal = if output[x][y] > 128 then 255 else 0
-      error = (output[x][y] - newVal) / curAlgo.divisor
+
+      # The difference between the current value and the full B/W value will determine
+      # the magnitude of the error we pass along to the neighboring pixels.  Since we only
+      # pass on fractions with a common divisor, divide it now too.
+      clampedVal = Math.max(0, Math.min(output[x][y], 255))
+      error = (clampedVal - newVal) / curAlgo.divisor
       output[x][y] = newVal
 
       for i in [0...curAlgo.matrix.length]
@@ -83,13 +95,14 @@ Caman.Plugin.register "dither", (algo) ->
           errorX = x + j - matrixWidthAdj
           errorY = y + i
 
+          # Bounds checking - don't want to write past the end of the array
           unless errorX < 0 or errorX >= width or errorY >= height
             output[errorX][errorY] += error * curAlgo.matrix[i][j]
 
   # Now copy the output array back into our image
   for y in [0...height]
     for x in [0...width]
-      isBlack = output[x][y] <= 128
+      isBlack = output[x][y] < 128
       value = if isBlack then 0 else 255
       pixels[ind(x,y)]     = value
       pixels[ind(x,y) + 1] = value
