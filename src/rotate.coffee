@@ -17,7 +17,7 @@ Caman.Plugin.register "rotate", (degrees) ->
     height = @canvas.width
     x = width/2
     y = height/2
-  else if angle == 180
+  else if angle == 180 or angle == -180
     width = @canvas.width
     height = @canvas.height
     x = width/2
